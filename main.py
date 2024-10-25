@@ -7,14 +7,14 @@ import joblib
 from flask import Flask
 
 
-with open('trans_encoder1.pkl', 'rb') as file:
+with open('trans_encoder_new.pkl', 'rb') as file:
     encoder = pickle.load(file)
 
 # Function to load the model
 @st.cache_resource
 def load_model():
     with st.spinner("Loading model... Please wait."):
-        with open('trans_predictor1.pkl', 'rb') as file:
+        with open('trans_predictor_new.pkl', 'rb') as file:
             return pickle.load(file)
 
 
