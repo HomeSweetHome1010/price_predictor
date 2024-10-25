@@ -5,3 +5,4 @@ numpy==2.0.0
 scikit-learn==1.5.2
 category-encoders==2.6.4
 joblib==1.4.2
+flask_cors=5.0.0
