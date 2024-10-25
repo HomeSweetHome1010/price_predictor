@@ -4,16 +4,36 @@ import pandas as pd
 import numpy as np
 import pickle
 import category_encoders as ce
+import threading
+
+encoder = None
+rf = None
+is_model_loaded = False
 
 app = Flask(__name__)
 CORS(app)
 
 # Load the encoder and model
-with open('trans_encoder_new.pkl', 'rb') as file:
-    encoder = pickle.load(file)
+# with open('trans_encoder_new.pkl', 'rb') as file:
+#     encoder = pickle.load(file)
 
-with open('trans_predictor_new.pkl', 'rb') as file:
-    rf = pickle.load(file)
+# with open('trans_predictor_new.pkl', 'rb') as file:
+#     rf = pickle.load(file)
+
+def load_model():
+    global encoder, rf, is_model_loaded
+    # Load the encoder and model
+    try:
+        with open('trans_encoder_new.pkl', 'rb') as file:
+            encoder = pickle.load(file)
+
+        with open('trans_predictor_new.pkl', 'rb') as file:
+            rf = pickle.load(file)
+
+        is_model_loaded = True
+        print("Model and encoder loaded successfully.")
+    except Exception as e:
+        print(f"Error loading model: {e}")
 
 
 @app.route('/')
@@ -24,6 +44,9 @@ def home():
 # Define the prediction route
 @app.route('/predict', methods=['POST'])
 def predict_price():
+    if not is_model_loaded:
+        return jsonify({'error': 'Model is still loading, please try again later.'})
+    
     try:
         # Extract data from request JSON
         data = request.json
@@ -71,4 +94,5 @@ def predict_price():
 
 
 if __name__ == '__main__':
+    threading.Thread(target=load_model).start()
     app.run(debug=True)
