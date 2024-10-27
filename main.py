@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template_string
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
@@ -12,13 +12,6 @@ is_model_loaded = False
 
 app = Flask(__name__)
 CORS(app)
-
-# Load the encoder and model
-# with open('trans_encoder_new.pkl', 'rb') as file:
-#     encoder = pickle.load(file)
-
-# with open('trans_predictor_new.pkl', 'rb') as file:
-#     rf = pickle.load(file)
 
 def load_model():
     global encoder, rf, is_model_loaded
@@ -35,17 +28,35 @@ def load_model():
     except Exception as e:
         print(f"Error loading model: {e}")
 
-
 @app.route('/')
 def home():
-    return "Property Price Estimator API"
+    global is_model_loaded
+    # Check if the model is loaded
+    if not is_model_loaded:
+        # Start loading the model in a background thread
+        threading.Thread(target=load_model).start()
+        status_message = "Model is loading, please wait..."
+    else:
+        status_message = "Model is ready! You can now proceed to make predictions."
 
+    # HTML content to render
+    html_content = f"""
+    <html>
+        <head><title>Property Price Estimator API</title></head>
+        <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+            <h1>Property Price Estimator API</h1>
+            <p>{status_message}</p>
+            <p>Use the <strong>/predict</strong> endpoint to get a property price estimate.</p>
+        </body>
+    </html>
+    """
+    return render_template_string(html_content)
 
 # Define the prediction route
 @app.route('/predict', methods=['POST'])
 def predict_price():
     if not is_model_loaded:
-        return jsonify({'error': 'Model is still loading, please try again later.'})
+        return jsonify({'error': 'Model is still loading, please try again later.'}), 503
     
     try:
         # Extract data from request JSON
@@ -90,9 +101,7 @@ def predict_price():
         return jsonify({'predicted_price': f"AED {int(prediction[0]):,}"})
 
     except Exception as e:
-        return jsonify({'error': str(e)})
-
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    threading.Thread(target=load_model).start()
     app.run(debug=True)
