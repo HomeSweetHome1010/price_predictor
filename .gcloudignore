@@ -1,0 +1,50 @@
+# Python virtual environment
+venv/
+env/
+.env/
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+
+# Development files
+*.log
+*.sqlite3
+.git/
+.gitignore
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if you have any frontend stuff)
+node_modules/
+
+# Local development settings
+.env
+.env.local
+*.local
+
+# Test files
+tests/
+test/
+coverage/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Build and dist directories
+build/
+dist/
+*.egg-info/
+
+vercel.json
+mainq.yaml
+streamlit.py
