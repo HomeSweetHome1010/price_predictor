@@ -1,0 +1,9 @@
+[theme]
+primaryColor = "#1c83e1"
+backgroundColor = "#FFFFFF"  # This sets a white background
+secondaryBackgroundColor = "#f0f2f6"  # Sets a lighter secondary background
+textColor = "#000000"  # Sets text color to black
+font = "sans serif"
+
+# Footer removal
+showFooter = false
