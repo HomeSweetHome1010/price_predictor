@@ -498,9 +498,39 @@ area_name_en = st.selectbox("Location", [area["area_name_en"] for area in areas]
 #     nearest_metro = st.selectbox("Nearest Metro", selected_location["nearest_metro_en"])
 
 
-rooms_value = st.selectbox('Rooms', ["Studio", "1 B/R", "2 B/R", "3 B/R", "4 B/R", "5 B/R", "6 B/R", "7 B/R", "Office"])
+# rooms_value = st.selectbox('Rooms', ["Studio", "1 B/R", "2 B/R", "3 B/R", "4 B/R", "5 B/R", "6 B/R", "7 B/R", "Office"])
 
-procedure_area = st.number_input('Property Area', min_value=0.0, step=1.0)
+rooms = {
+    "Studio": 1,
+    "1 B/R": 2,
+    "2 B/R": 3,
+    "3 B/R": 5,
+    "4 B/R": 6,
+    "5 B/R": 7,
+    "6 B/R": 8,
+    "7 B/R": 9,
+    "Office": 4
+}
+
+# Create a select box for room selection
+selected_room = st.selectbox('Room', list(rooms.keys()))
+
+# Get the mapped value for the selected room
+rooms_value = rooms[selected_room]
+
+procedure_area = st.number_input('Property Area (sq.m)', min_value=0.0, step=1.0)
+
+
+import streamlit as st
+
+# Hide the "Made with Streamlit" footer and main menu
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 
@@ -519,7 +549,7 @@ if st.button('Predict Price'):
               'property_type_en': [property_type_en],
                 'reg_type_en': [reg_type_en],
                "area_name_en": [area_name_en],
-          #  'rooms_value': [rooms_value],
+           'rooms_value': [rooms_value],
             'procedure_area': [procedure_area],
             'trans_group_en': [trans_group],
         })
@@ -545,7 +575,7 @@ if st.button('Predict Price'):
         st.markdown(f"<h1 style='font-size:20px;'>Predicted price for this property is between AED {lower_bound:,} - AED {upper_bound:,} </h1>",
     unsafe_allow_html=True)
 
-
+    
     except Exception as e:
         st.error(f"An error occurred: {e}")
        
