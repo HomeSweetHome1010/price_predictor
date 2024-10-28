@@ -526,8 +526,8 @@ import streamlit as st
 # Hide the "Made with Streamlit" footer and main menu
 hide_streamlit_style = """
     <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
+      #MainMenu {display: none;}
+    footer {display: none;}
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
