@@ -7,14 +7,14 @@ import joblib
 from flask import Flask
 
 
-with open('trans_encoder_new.pkl', 'rb') as file:
+with open('1encoder.pkl', 'rb') as file:
     encoder = pickle.load(file)
 
 # Function to load the model
 @st.cache_resource
 def load_model():
     with st.spinner("Loading model... Please wait."):
-        with open('trans_predictor_new.pkl', 'rb') as file:
+        with open('1predictor.pkl', 'rb') as file:
             return pickle.load(file)
 
 
@@ -483,29 +483,24 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Select input options
-trans_group = st.selectbox('Transaction Type', ['Sales', 'Mortgages'])
-reg_type_en = st.selectbox('Registration Type', ["Off-Plan Properties", "Existing Properties"])
-property_type_en = st.selectbox('Property Type', ["Unit", "Villa", "Land", "Building"])
+trans_group = st.selectbox('Transaction Type', ['Cash', 'Mortgages'])
+reg_type_en = st.selectbox('Registration Type', ["Off-Plan", "Ready Property"])
+property_type_en = st.selectbox('Property Type', ["Apartment", "Villa"])
 property_usage_en = st.selectbox('Property Usage', [
-    "Commercial", "Residential", "Hospitality", "Industrial", 
-    "Agricultural", "Multi-Use", "Storage", "Residential / Commercial", "Other"
+    "Commercial", "Residential"
 ])
 area_name_en = st.selectbox("Location", [area["area_name_en"] for area in areas])
 
-selected_location = next((area for area in areas if area["area_name_en"] == area_name_en), None)
+# selected_location = next((area for area in areas if area["area_name_en"] == area_name_en), None)
 
-nearest_metro = None
-if selected_location:
-    nearest_metro = st.selectbox("Nearest Metro", selected_location["nearest_metro_en"])
+# nearest_metro = None
+# if selected_location:
+#     nearest_metro = st.selectbox("Nearest Metro", selected_location["nearest_metro_en"])
 
 
-rooms_value = st.selectbox('Rooms', ["Studio", "1 B/R", "2 B/R", "3 B/R", "Office", "Others"])
+rooms_value = st.selectbox('Rooms', ["Studio", "1 B/R", "2 B/R", "3 B/R", "4 B/R", "5 B/R", "6 B/R", "7 B/R", "Office"])
 
 procedure_area = st.number_input('Property Area', min_value=0.0, step=1.0)
-
-
-
-has_parking = st.selectbox('Has Parking?', ['Yes', 'No',])
 
 
 
@@ -514,7 +509,9 @@ has_parking = st.selectbox('Has Parking?', ['Yes', 'No',])
 # Prediction
 if st.button('Predict Price'):
     try:
-        has_parking = 1 if has_parking == 'Yes' else 0
+        # has_parking = 1 if has_parking == 'Yes' else 0
+
+        trans_group = 'Sales' if trans_group == 'Cash' else 'Mortgages'
 
         # Prepare the input query
         input_data = pd.DataFrame({
@@ -522,10 +519,7 @@ if st.button('Predict Price'):
               'property_type_en': [property_type_en],
                 'reg_type_en': [reg_type_en],
                "area_name_en": [area_name_en],
-                "nearest_metro_en": [nearest_metro],
-          
-            'rooms_value': [rooms_value],
-            'has_parking': [has_parking],
+          #  'rooms_value': [rooms_value],
             'procedure_area': [procedure_area],
             'trans_group_en': [trans_group],
         })
