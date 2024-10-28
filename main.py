@@ -572,7 +572,7 @@ if st.button('Predict Price'):
 
         
 
-        st.markdown(f"<h1 style='font-size:20px;'>Predicted price for this property is between AED {lower_bound:,} - AED {upper_bound:,} </h1>",
+        st.markdown(f"<h3 style='font-size:15px;'>Predicted price for this property is between AED {lower_bound:,} - AED {upper_bound:,} </h3>",
     unsafe_allow_html=True)
 
     
